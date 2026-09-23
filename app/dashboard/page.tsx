@@ -1,4 +1,6 @@
+import { LayoutDashboard } from "lucide-react";
 import { getCurrentProfile } from "@/lib/permissions";
+import { EmptyState } from "@/components/states";
 
 export default async function DashboardPage() {
   const profile = await getCurrentProfile();
@@ -13,10 +15,11 @@ export default async function DashboardPage() {
           Voici un aperçu de votre activité locative.
         </p>
       </div>
-
-      <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-        Le tableau de bord complet sera disponible prochainement.
-      </div>
+      <EmptyState
+        icon={LayoutDashboard}
+        title="Bientôt disponible"
+        description="Le tableau de bord complet sera développé dans une prochaine phase."
+      />
     </div>
   );
 }

@@ -1,4 +1,6 @@
+import { Home } from "lucide-react";
 import { getCurrentProfile } from "@/lib/permissions";
+import { EmptyState } from "@/components/states";
 
 export default async function TenantHomePage() {
   const profile = await getCurrentProfile();
@@ -13,10 +15,11 @@ export default async function TenantHomePage() {
           Bienvenue dans votre espace locataire.
         </p>
       </div>
-
-      <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-        Votre espace locataire sera disponible prochainement.
-      </div>
+      <EmptyState
+        icon={Home}
+        title="Bientôt disponible"
+        description="Votre espace locataire sera développé dans une prochaine phase."
+      />
     </div>
   );
 }
