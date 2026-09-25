@@ -1,9 +1,9 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -25,7 +25,7 @@ export function ThemeToggle() {
           <Button variant="ghost" size="icon" aria-label="Changer le thème" />
         }
       >
-        {mounted && theme === "dark" ? (
+        {mounted && resolvedTheme === "dark" ? (
           <Moon className="size-4" />
         ) : (
           <Sun className="size-4" />
