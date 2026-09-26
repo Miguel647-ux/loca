@@ -136,4 +136,11 @@
   html {
     @apply font-sans;
   }
+  
+}/* Force les contrôles natifs (select, date, scrollbar) à suivre le thème */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }

@@ -68,3 +68,67 @@ export type PropertyWithStats = Property & {
   units_occupied: number;
   units_available: number;
 };
+
+// ============================================================
+// PHASE 5 — Tenants & Leases
+// ============================================================
+
+export type LeaseStatus = "pending" | "active" | "expired" | "terminated";
+
+export type Tenant = {
+  id: string;
+  owner_id: string;
+  user_id: string | null;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string | null;
+  id_number: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Lease = {
+  id: string;
+  unit_id: string;
+  tenant_id: string;
+  start_date: string;
+  end_date: string | null;
+  monthly_rent: number;
+  deposit_amount: number;
+  payment_due_day: number;
+  status: LeaseStatus;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+// Vues enrichies
+export type LeaseWithRelations = Lease & {
+  tenant: Pick<Tenant, "id" | "first_name" | "last_name" | "phone"> | null;
+  unit: {
+    id: string;
+    unit_number: string;
+    property_id: string;
+  } | null;
+  property: {
+    id: string;
+    name: string;
+  } | null;
+};
+
+export type TenantWithActiveLease = Tenant & {
+  active_lease: {
+    id: string;
+    status: LeaseStatus;
+    start_date: string;
+    end_date: string | null;
+    monthly_rent: number;
+    unit_number: string;
+    property_name: string;
+  } | null;
+};
+

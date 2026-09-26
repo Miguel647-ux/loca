@@ -9,8 +9,8 @@ import { getPropertyImagesSignedUrls } from "@/actions/property-images";
 import { PropertyImageGallery } from "@/components/properties/property-image-gallery";
 import { PropertyImageUpload } from "@/components/properties/property-image-upload";
 import { PropertyImageManager } from "@/components/properties/property-image-manager";
-import { PropertyUnitsList } from "@/components/properties/property-units-list";
 import { PropertyDetailActions } from "@/components/properties/property-detail-actions";
+import { PropertyUnitsSection } from "@/components/units/property-units-section";
 
 export const metadata: Metadata = {
   title: "Détail propriété — Loca",
@@ -159,16 +159,12 @@ export default async function PropertyDetailPage({
         )}
       </div>
 
-      {/* Logements (lecture seule) */}
-      <div className="space-y-3">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-heading text-lg font-semibold">Logements</h2>
-          <span className="text-sm text-muted-foreground">
-            {units.length} {units.length > 1 ? "logements" : "logement"}
-          </span>
-        </div>
-        <PropertyUnitsList units={units} />
-      </div>
+      {/* Logements */}
+      <PropertyUnitsSection
+        units={units}
+        propertyId={property.id}
+        isArchived={isArchived}
+      />
     </div>
   );
 }
