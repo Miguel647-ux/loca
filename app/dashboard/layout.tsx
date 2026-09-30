@@ -5,6 +5,7 @@ import { getCurrentProfile } from "@/lib/permissions";
 import { Logo } from "@/components/layout/logo";
 import { SidebarContent } from "@/components/layout/sidebar-content";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
+import { getUnreadNotificationsCount } from "@/actions/notifications";
 
 export default async function DashboardLayout({
   children,
@@ -34,6 +35,9 @@ export default async function DashboardLayout({
     role: profile.role,
   };
 
+    const unreadResult = await getUnreadNotificationsCount();
+const unreadCount = unreadResult.success ? unreadResult.data!.count : 0;
+
   return (
     <div className="min-h-screen flex bg-background">
       <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r bg-card">
@@ -52,6 +56,7 @@ export default async function DashboardLayout({
           notificationsHref="/dashboard/notifications"
           settingsHref="/dashboard/settings"
           homeHref="/dashboard"
+          unreadCount={unreadCount}
         />
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
           {children}

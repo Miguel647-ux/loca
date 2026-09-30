@@ -132,3 +132,161 @@ export type TenantWithActiveLease = Tenant & {
   } | null;
 };
 
+// ============================================================
+// PHASE 6 — Rent Dues & Payments
+// ============================================================
+
+export type DueStatus = "pending" | "partial" | "paid" | "late" | "cancelled";
+
+export type PaymentMethod =
+  | "cash"
+  | "bank_transfer"
+  | "mobile_money"
+  | "other";
+
+export type RentDue = {
+  id: string;
+  lease_id: string;
+  period_start: string;
+  period_end: string;
+  due_date: string;
+  amount_due: number;
+  created_at: string;
+};
+
+export type RentPayment = {
+  id: string;
+  rent_due_id: string;
+  amount: number;
+  payment_date: string;
+  payment_method: PaymentMethod;
+  reference: string | null;
+  notes: string | null;
+  recorded_by: string;
+  created_at: string;
+};
+
+// Vue enrichie pour la liste
+export type RentDueListItem = {
+  id: string;
+  lease_id: string;
+  period_start: string;
+  period_end: string;
+  due_date: string;
+  amount_due: number;
+  amount_paid: number;
+  amount_remaining: number;
+  status: DueStatus;
+  tenant_id: string;
+  tenant_first_name: string;
+  tenant_last_name: string;
+  tenant_phone: string;
+  unit_id: string;
+  unit_number: string;
+  property_id: string;
+  property_name: string;
+};
+
+// Vue détaillée
+export type RentDueDetail = RentDueListItem & {
+  lease_status: string;
+  lease_start_date: string;
+  lease_end_date: string | null;
+  lease_monthly_rent: number;
+};
+
+// Paiement avec profil de l'enregistreur
+export type RentPaymentWithProfile = RentPayment & {
+  recorded_by_profile: {
+    id: string;
+    first_name: string;
+    last_name: string;
+  } | null;
+  receipt:{
+    id: string;
+    receipt_number: string;
+    pdf_storage_path: string | null;
+    issued_at: string;
+  } | null;
+};
+
+// Statistiques globales
+export type RentDuesStats = {
+  total_due: number;
+  total_paid: number;
+  total_remaining: number;
+  count_paid: number;
+  count_partial: number;
+  count_late: number;
+  count_pending: number;
+};
+
+// ============================================================
+// PHASE 7 — Receipts & Notifications
+// ============================================================
+
+export type NotificationType =
+  | "rent_due"
+  | "rent_late"
+  | "payment_received"
+  | "lease_expiring"
+  | "system";
+
+export type Receipt = {
+  id: string;
+  payment_id: string;
+  receipt_number: string;
+  issued_at: string;
+  pdf_storage_path: string | null;
+};
+
+export type Notification = {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  read_at: string | null;
+  created_at: string;
+  link_url: string | null;
+};
+
+export type ReceiptWithRelations = Receipt & {
+  payment: {
+    id: string;
+    amount: number;
+    payment_date: string;
+    payment_method: string;
+    reference: string | null;
+    notes: string | null;
+  } | null;
+  rent_due: {
+    id: string;
+    period_start: string;
+    period_end: string;
+    due_date: string;
+    amount_due: number;
+  } | null;
+  tenant: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string | null;
+  } | null;
+  unit: {
+    id: string;
+    unit_number: string;
+  } | null;
+  property: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+  } | null;
+  recorded_by: {
+    id: string;
+    first_name: string;
+    last_name: string;
+  } | null;
+};

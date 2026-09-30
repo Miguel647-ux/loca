@@ -4,13 +4,19 @@ import { ChevronLeft } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { getLeases } from "@/actions/leases";
 import {
   CreateRentDueForm,
   type LeaseOption,
 } from "@/components/rent-dues/create-rent-due-form";
 
 export const metadata: Metadata = { title: "Nouvelle échéance — Loca" };
+
+type LeaseRow = {
+  id: string;
+  monthly_rent: number;
+  tenant: { first_name: string; last_name: string } | null;
+  unit: { unit_number: string; property_id: string } | null;
+};
 
 export default async function NewRentDuePage({
   searchParams,
@@ -27,24 +33,21 @@ export default async function NewRentDuePage({
   const defaultLeaseId =
     typeof raw.lease_id === "string" ? raw.lease_id : undefined;
 
-  // RPC : contourne la récursion units ↔ leases
-  const result = await getLeases({
-    q: "",
-    status: "active",
-    page: 1,
-    pageSize: 100,
-  });
+  // Récupère les baux actifs avec tenant + unit
+  const { data: leasesRaw } = await supabase
+    .from("leases")
+    .select(
+      "id, monthly_rent, status, tenant:tenants(first_name, last_name), unit:units(unit_number, property_id)"
+    )
+    .eq("status", "active");
 
-  const leases: LeaseOption[] =
-    result.success && result.data
-      ? result.data.items.map((l) => ({
-          id: l.id,
-          label: `${l.tenant?.first_name ?? "?"} ${l.tenant?.last_name ?? ""} · ${
-            l.unit?.unit_number ?? "?"
-          } — ${Number(l.monthly_rent).toLocaleString("fr-FR")} FCFA`,
-          monthly_rent: Number(l.monthly_rent),
-        }))
-      : [];
+  const leases: LeaseOption[] = ((leasesRaw ?? []) as unknown as LeaseRow[]).map(
+    (l) => ({
+      id: l.id,
+      label: `${l.tenant?.first_name ?? "?"} ${l.tenant?.last_name ?? ""} · ${l.unit?.unit_number ?? "?"} — ${Number(l.monthly_rent).toLocaleString("fr-FR")} FCFA`,
+      monthly_rent: Number(l.monthly_rent),
+    })
+  );
 
   return (
     <div className="space-y-6">

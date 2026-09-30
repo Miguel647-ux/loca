@@ -18,12 +18,14 @@ export function DashboardHeader({
   notificationsHref,
   settingsHref,
   homeHref,
+  unreadCount = 0,
 }: {
   variant: "owner" | "tenant";
   profile: UserMenuProfile;
   notificationsHref: string;
   settingsHref: string;
   homeHref: string;
+  unreadCount?: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -47,7 +49,7 @@ export function DashboardHeader({
 
       <div className="flex-1" />
 
-      <NotificationsButton href={notificationsHref} />
+      <NotificationsButton href={notificationsHref} unreadCount={unreadCount} />
       <ThemeToggle />
       <UserMenu profile={profile} settingsHref={settingsHref} />
     </header>
