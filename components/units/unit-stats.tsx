@@ -1,4 +1,3 @@
-import { DoorOpen } from "lucide-react";
 import type { Unit } from "@/types/database";
 
 function formatCurrency(amount: number) {

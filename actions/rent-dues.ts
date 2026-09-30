@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import {
   createRentDueSchema,
   rentDueSearchSchema,
-  type CreateRentDueInput,
 } from "@/lib/validations/rent-due";
 import type { ActionResult } from "@/lib/action-result";
 import type {

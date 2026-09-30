@@ -1,5 +1,3 @@
-import { getReceipt } from "@/actions/receipts";
-import { GenerateReceiptButton } from "@/components/receipts/generate-receipt-button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -51,11 +49,6 @@ export default async function RentDueDetailPage({
   const paymentsResult = await getRentPayments(due.id);
   const payments = paymentsResult.success ? paymentsResult.data! : [];
 
-    const { data: receiptData } = await supabase
-    .from("receipts")
-    .select("id, receipt_number, issued_at, pdf_storage_path")
-    .eq("payment_id", (payments[0] as { id: string } | undefined)?.id ?? "")
-    .maybeSingle();
 
   return (
     <div className="space-y-8 max-w-5xl">

@@ -19,7 +19,7 @@ import {
   UNIT_TYPE_LABELS,
 } from "@/lib/validations/unit";
 
-export function UnitFilters({ propertyId }: { propertyId?: string }) {
+export function UnitFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

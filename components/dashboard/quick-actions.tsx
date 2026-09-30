@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Building2,
   CreditCard,
-  DoorOpen,
   FileText,
   Receipt,
   Users,

@@ -57,7 +57,6 @@ export default async function EditUnitPage({
         <h2 className="font-heading text-lg font-semibold">Bail actif</h2>
         <ActiveLeasePanel
           unitId={unit.id}
-          propertyId={propertyId}
           activeLease={activeLease}
         />
       </section>

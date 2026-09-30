@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import {
   PAYMENT_METHOD_LABELS,
   type PaymentMethod,

@@ -15,7 +15,7 @@ function formatCurrency(n: number) {
     .concat(" FCFA");
 }
 
-function formatPeriod(start: string, end: string) {
+function formatPeriod(start: string) {
   const s = new Date(start);
   return new Intl.DateTimeFormat("fr-FR", {
     month: "long",
@@ -71,7 +71,7 @@ export function LeaseRentDuesPanel({
               {dues.map((d) => (
                 <tr key={d.id} className="border-t hover:bg-muted/20">
                   <td className="px-4 py-3 capitalize">
-                    {formatPeriod(d.period_start, d.period_end)}
+                    {formatPeriod(d.period_start)}
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">
                     {formatCurrency(Number(d.amount_due))}

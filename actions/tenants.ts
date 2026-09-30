@@ -6,10 +6,9 @@ import { createClient } from "@/lib/supabase/server";
 import {
   tenantSchema,
   tenantSearchSchema,
-  type TenantInput,
 } from "@/lib/validations/tenant";
 import type { ActionResult } from "@/lib/action-result";
-import type { Tenant, TenantWithActiveLease } from "@/types/database";
+import type { Tenant, } from "@/types/database";
 
 // ============================================================
 // HELPERS

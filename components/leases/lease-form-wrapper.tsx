@@ -1,6 +1,6 @@
 "use client";
 
-import { createLease, updateLease } from "@/actions/leases";
+import { updateLease } from "@/actions/leases";
 import { LeaseForm, type LeaseFormAction, type LeaseFormValues } from "./lease-form";
 
 export function EditLeaseFormWrapper({

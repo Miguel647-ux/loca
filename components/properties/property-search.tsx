@@ -23,7 +23,7 @@ export function PropertySearch() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const initialQ = searchParams.get("q") ?? "";
   const initialStatus = searchParams.get("status") ?? "active";

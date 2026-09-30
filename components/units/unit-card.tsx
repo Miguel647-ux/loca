@@ -83,7 +83,7 @@ export function UnitCard({
         <DeleteUnitDialog
           unitId={unit.id}
           unitNumber={unit.unit_number}
-          propertyId={propertyId}
+
         />
       </div>
     </div>

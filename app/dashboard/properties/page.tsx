@@ -70,7 +70,7 @@ export default async function PropertiesPage({
     .map((p) => p.property_images?.[0]?.storage_path)
     .filter((x): x is string => Boolean(x));
 
-  let coverUrls: Record<string, string> = {};
+  const coverUrls: Record<string, string> = {};
   if (coverPaths.length > 0) {
     const signed = await getPropertyImagesSignedUrls(coverPaths);
     if (signed.success && signed.data) {

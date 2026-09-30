@@ -8,9 +8,6 @@ import {
   updateLeaseSchema,
   endLeaseSchema,
   leaseSearchSchema,
-  type CreateLeaseInput,
-  type UpdateLeaseInput,
-  type EndLeaseInput,
 } from "@/lib/validations/lease";
 import type { ActionResult } from "@/lib/action-result";
 import type { Lease, LeaseWithRelations } from "@/types/database";

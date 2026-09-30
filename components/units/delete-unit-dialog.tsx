@@ -22,12 +22,10 @@ import { Button } from "@/components/ui/button";
 export function DeleteUnitDialog({
   unitId,
   unitNumber,
-  propertyId,
   variant = "icon",
 }: {
   unitId: string;
   unitNumber: string;
-  propertyId: string;
   variant?: "icon" | "button";
 }) {
   const router = useRouter();

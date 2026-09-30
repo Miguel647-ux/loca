@@ -29,11 +29,9 @@ export type ActiveLeasePanelData = {
 
 export function ActiveLeasePanel({
   unitId,
-  propertyId,
   activeLease,
 }: {
   unitId: string;
-  propertyId: string;
   activeLease: ActiveLeasePanelData | null;
 }) {
   if (!activeLease) {

@@ -7,7 +7,6 @@ import {
   DoorOpen,
   FileText,
   Plus,
-  Receipt,
   Wallet,
 } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -26,15 +25,6 @@ import { RecentPayments } from "@/components/dashboard/recent-payments";
 import { LateDues } from "@/components/dashboard/late-dues";
 
 export const metadata: Metadata = { title: "Tableau de bord — Loca" };
-
-function formatCurrency(n: number) {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "decimal",
-    maximumFractionDigits: 0,
-  })
-    .format(n)
-    .concat(" FCFA");
-}
 
 export default async function DashboardPage() {
   const supabase = await createClient();

@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import {
   recordRentPaymentSchema,
-  type RecordRentPaymentInput,
 } from "@/lib/validations/rent-payment";
 import type { ActionResult } from "@/lib/action-result";
 import type { RentPayment, RentPaymentWithProfile } from "@/types/database";
