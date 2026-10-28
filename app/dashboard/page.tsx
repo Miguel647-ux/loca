@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Info } from "lucide-react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -82,6 +83,66 @@ export default async function DashboardPage() {
           <Link href="/tenant" className={cn(buttonVariants())}>
             Accéder à mon espace locataire
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+    // Cas : nouvel utilisateur sans propriété ET sans lien locataire
+  // (ex: un locataire qui s'inscrit avant que son propriétaire ne crée sa fiche)
+  if (counts.properties === 0 && !isTenant) {
+    return (
+      <div className="space-y-6 max-w-2xl">
+        <div>
+          <h1 className="font-heading text-3xl font-bold tracking-tight">
+            Bonjour{profile ? `, ${profile.first_name}` : ""}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Bienvenue sur Loca.
+          </p>
+        </div>
+
+        <div className="rounded-lg border bg-card p-6 space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="flex size-10 items-center justify-center rounded-full bg-muted shrink-0">
+              <Info className="size-5 text-muted-foreground" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-medium">Votre compte est prêt</p>
+              <p className="text-sm text-muted-foreground">
+                Vous n'êtes associé à aucune propriété ni à aucun dossier locataire
+                pour le moment.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-md bg-muted/40 p-4 space-y-2">
+            <p className="text-sm font-medium">Vous êtes locataire ?</p>
+            <p className="text-sm text-muted-foreground">
+              Demandez à votre propriétaire ou gestionnaire de créer votre fiche
+              locataire avec <strong>exactement cette adresse email</strong> :{" "}
+              <span className="font-mono text-xs bg-background px-1.5 py-0.5 rounded">
+                {user.email}
+              </span>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Dès que la fiche sera créée, votre accès à l'espace locataire sera
+              activé automatiquement (déconnectez-vous puis reconnectez-vous si
+              nécessaire).
+            </p>
+          </div>
+
+          <div className="pt-2 border-t flex flex-col sm:flex-row gap-2">
+            <Link href="/dashboard/properties/new" className={cn(buttonVariants())}>
+              Créer ma première propriété
+            </Link>
+            <Link
+              href="/tenant"
+              className={cn(buttonVariants({ variant: "outline" }))}
+            >
+              Tester l'espace locataire
+            </Link>
+          </div>
         </div>
       </div>
     );
