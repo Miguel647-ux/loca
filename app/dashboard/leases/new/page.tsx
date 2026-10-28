@@ -12,12 +12,12 @@ import {
 
 export const metadata: Metadata = { title: "Nouveau bail — Loca" };
 
-type MyUnitRow = {
+type UnitRow = {
   id: string;
   unit_number: string;
   property_id: string;
   status: string;
-  property: { id: string; name: string } | null;
+  property: { name: string } | null;
 };
 
 export default async function NewLeasePage({
@@ -32,35 +32,26 @@ export default async function NewLeasePage({
   if (!user) redirect("/auth/login");
 
   const raw = await searchParams;
-  const defaultUnitId =
-    typeof raw.unit_id === "string" ? raw.unit_id : undefined;
+  const defaultUnitId = typeof raw.unit_id === "string" ? raw.unit_id : undefined;
 
-  // Locataires (RLS tenants : pas de récursion)
+  // 1. Récupérer les locataires
   const { data: tenants } = await supabase
     .from("tenants")
     .select("id, first_name, last_name, phone")
     .order("first_name", { ascending: true });
 
-  // Unités via RPC (contourne la récursion units ↔ leases)
-  const { data: unitsData, error: unitsError } = await supabase.rpc(
-    "list_my_units"
-  );
+  // 2. Récupérer TOUS les logements via la RPC (contourne la RLS)
+  const { data: unitsData } = await supabase.rpc("list_my_units");
+  const rows = (unitsData ?? []) as UnitRow[];
 
-  if (unitsError) {
-    console.error("[NewLeasePage] units RPC error:", unitsError);
-  }
-
-  const rows = (unitsData ?? []) as MyUnitRow[];
-
-  // On ne propose que les unités SANS bail actif
-  // (les unités occupées ne sont pas concernées par une nouvelle création)
-  const availableUnits = rows.filter((u) => u.status !== "occupied");
-
-  const units: UnitOption[] = availableUnits.map((u) => ({
+  // 3. On prépare la liste pour le formulaire
+  // On garde TOUS les logements, on ne filtre plus les "occupés" ici.
+  const units: UnitOption[] = rows.map((u) => ({
     id: u.id,
     unit_number: u.unit_number,
     property_id: u.property_id,
     property_name: u.property?.name ?? "—",
+    status: u.status, // On ajoute le statut pour le formulaire
   }));
 
   return (

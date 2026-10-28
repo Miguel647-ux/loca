@@ -46,6 +46,7 @@ export type UnitOption = {
   unit_number: string;
   property_id: string;
   property_name: string;
+  status: string; // Ajout du statut
 };
 
 export function LeaseCreateForm({
@@ -180,23 +181,29 @@ export function LeaseCreateForm({
                       <SelectValue>
                         {(() => {
                           const u = units.find((x) => x.id === field.value);
-                          return u
-                            ? `${u.unit_number} — ${u.property_name}`
-                            : "Sélectionner un logement";
+                          if (!u) return "Sélectionner un logement";
+                          return `${u.unit_number} — ${u.property_name} ${u.status === 'occupied' ? '(Occupé)' : ''}`;
                         })()}
                       </SelectValue>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {units.map((u) => (
-                      <SelectItem key={u.id} value={u.id}>
+                      <SelectItem 
+                        key={u.id} 
+                        value={u.id}
+                        disabled={u.status === "occupied"} // Désactive si occupé
+                      >
                         {u.unit_number} — {u.property_name}
+                        {u.status === "occupied" && (
+                          <span className="text-muted-foreground ml-2">(Occupé)</span>
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  Un seul bail actif par logement.
+                  Seuls les logements disponibles peuvent être sélectionnés pour un nouveau bail.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
