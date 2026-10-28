@@ -18,7 +18,7 @@ export function GoogleAuthButton() {
         provider: "google",
         options: {
           // L'URL de retour vers notre app
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
