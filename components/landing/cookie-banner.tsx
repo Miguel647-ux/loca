@@ -32,7 +32,7 @@ export function CookieBanner() {
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:bottom-6 md:max-w-md z-50 animate-in fade-in slide-in-from-bottom-5 duration-500">
       <div className="rounded-2xl border bg-background/95 backdrop-blur shadow-2xl p-5">
-        <h3 className="font-heading font-semibold mb-2">🍪 Respect de votre vie privée</h3>
+        <h3 className="font-heading font-semibold mb-2">Respect de votre vie privée</h3>
         <p className="text-sm text-muted-foreground mb-4">
           LOCA utilise des cookies essentiels au fonctionnement de la plateforme (connexion, sécurité). 
           Nous n'utilisons aucun cookie publicitaire ou de traçage externe.{" "}
