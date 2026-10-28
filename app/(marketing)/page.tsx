@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CookieBanner } from "@/components/landing/cookie-banner";
 import { 
   ArrowRight, 
   Building2, 
@@ -174,19 +175,21 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t py-8 md:py-12 bg-background relative z-10">
+            <footer className="border-t py-8 md:py-12 bg-background relative z-10">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="font-heading font-bold text-xl">Loca</span>
             <span className="text-muted-foreground text-sm">© {new Date().getFullYear()}</span>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
+            <Link href="/legal/notices" className="hover:text-foreground">Mentions légales</Link>
             <Link href="/legal/privacy" className="hover:text-foreground">Confidentialité</Link>
             <Link href="/legal/terms" className="hover:text-foreground">CGU</Link>
             <Link href="/contact" className="hover:text-foreground">Contact</Link>
           </div>
         </div>
       </footer>
+      <CookieBanner />
     </div>
   );
 }

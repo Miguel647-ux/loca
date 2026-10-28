@@ -28,7 +28,14 @@ export default function PrivacyPage() {
           <p>Les données sont hébergées sur Supabase (PostgreSQL) avec des règles de sécurité strictes (RLS). Chaque propriétaire ne peut voir que ses propres données, et chaque locataire ne voit que ses propres informations.</p>
 
           <h2 className="text-lg font-semibold text-foreground mt-8">4. Vos droits</h2>
-          <p>Conformément aux réglementations en vigueur, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous.</p>
+          <p>Conformément aux réglementations en vigueur (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous par email à <strong>azifanmiguel647@gmail.com</strong>.</p>
+
+          <h2 className="text-lg font-semibold text-foreground mt-8">5. Utilisation des cookies</h2>
+          <p>LOCA utilise uniquement des <strong>cookies techniques (strictement nécessaires)</strong> pour gérer l'authentification, la session utilisateur et la sécurité de la plateforme. Ces cookies sont indispensables au fonctionnement du service.</p>
+          <p>Nous n'utilisons <strong>aucun cookie publicitaire, analytique ou de traçage tiers</strong>. Aucun consentement n'est requis pour les cookies techniques, mais nous vous informons de leur présence par souci de transparence.</p>
+
+          <h2 className="text-lg font-semibold text-foreground mt-8">6. Contact</h2>
+          <p>Pour toute question relative à vos données personnelles, vous pouvez nous écrire à : <a href="mailto:azifanmiguel647@gmail.com" className="text-[var(--brand)] underline">azifanmiguel647@gmail.com</a>.</p>
         </div>
       </main>
     </div>
