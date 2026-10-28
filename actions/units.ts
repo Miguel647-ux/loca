@@ -368,3 +368,22 @@ export async function deleteUnit(unitId: string): Promise<ActionResult> {
   revalidatePath("/dashboard/units");
   return { success: true, message: "Logement supprimé." };
 }
+
+// ============================================================
+// GET ALL UNITS (pour la page centralisée)
+// ============================================================
+export async function getAllUnits() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Non authentifié." };
+
+  // Utilise la RPC créée en Phase 5
+  const { data, error } = await supabase.rpc("list_my_units");
+
+  if (error) {
+    console.error("[getAllUnits] RPC error:", error);
+    return { success: false, error: "Impossible de charger les logements." };
+  }
+
+  return { success: true, data: data as any[] };
+}

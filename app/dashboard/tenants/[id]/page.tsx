@@ -6,6 +6,7 @@ import { ChevronLeft, Mail, Phone, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getTenant } from "@/actions/tenants";
 import { DeleteTenantDialog } from "@/components/tenants/delete-tenant-dialog";
+import { LinkTenantButton } from "@/components/tenants/link-tenant-button"; // ← Nouvel import
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LeaseStatusBadge } from "@/components/leases/lease-status-badge";
@@ -38,9 +39,13 @@ export default async function TenantDetailPage({
 
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-2">
-            <h1 className="font-heading text-3xl font-bold tracking-tight">
-              {tenant.first_name} {tenant.last_name}
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="font-heading text-3xl font-bold tracking-tight">
+                {tenant.first_name} {tenant.last_name}
+              </h1>
+              {/* Affichage du badge de liaison à côté du nom */}
+              <LinkTenantButton tenantId={tenant.id} isLinked={!!tenant.user_id} />
+            </div>
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><Phone className="size-3.5" />{tenant.phone}</span>
               {tenant.email && <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{tenant.email}</span>}

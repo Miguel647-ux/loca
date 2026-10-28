@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { Home, LogOut, Settings, User as UserIcon } from "lucide-react";
 
 import { signOut } from "@/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,9 +30,11 @@ function initials(first: string, last: string) {
 export function UserMenu({
   profile,
   settingsHref,
+  showTenantLink = false,
 }: {
   profile: UserMenuProfile;
   settingsHref: string;
+  showTenantLink?: boolean;
 }) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
@@ -81,6 +83,12 @@ export function UserMenu({
           <Settings className="size-4" />
           <span>Paramètres</span>
         </DropdownMenuItem>
+        {showTenantLink && (
+          <DropdownMenuItem onClick={() => router.push("/tenant")}>
+            <Home className="size-4" />
+            <span>Espace locataire</span>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}

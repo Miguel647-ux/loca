@@ -345,3 +345,22 @@ export async function deleteTenant(tenantId: string): Promise<ActionResult> {
   revalidatePath("/dashboard/tenants");
   return { success: true, message: "Locataire supprimé." };
 }
+
+export async function linkTenantAccount(tenantId: string): Promise<ActionResult> {
+  const auth = await requireOwner();
+  if (!auth.ok) return { success: false, error: auth.error };
+
+  const { error } = await auth.supabase.rpc("link_tenant_by_email", {
+    p_tenant_id: tenantId,
+  });
+
+  if (error) {
+    if (error.message.includes("No user account")) {
+      return { success: false, error: "Aucun compte utilisateur trouvé avec cet email." };
+    }
+    return { success: false, error: "Impossible de lier le compte." };
+  }
+
+  revalidatePath(`/dashboard/tenants/${tenantId}`);
+  return { success: true, message: "Compte lié avec succès." };
+}

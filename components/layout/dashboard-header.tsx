@@ -19,6 +19,7 @@ export function DashboardHeader({
   settingsHref,
   homeHref,
   unreadCount = 0,
+  showTenantLink = false,
 }: {
   variant: "owner" | "tenant";
   profile: UserMenuProfile;
@@ -26,6 +27,7 @@ export function DashboardHeader({
   settingsHref: string;
   homeHref: string;
   unreadCount?: number;
+  showTenantLink?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -51,7 +53,7 @@ export function DashboardHeader({
 
       <NotificationsButton href={notificationsHref} unreadCount={unreadCount} />
       <ThemeToggle />
-      <UserMenu profile={profile} settingsHref={settingsHref} />
+      <UserMenu profile={profile} settingsHref={settingsHref} showTenantLink={showTenantLink} />
     </header>
   );
 }

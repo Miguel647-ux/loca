@@ -23,6 +23,7 @@ import { FinanceSummary } from "@/components/dashboard/finance-summary";
 import { ParcSummary } from "@/components/dashboard/parc-summary";
 import { RecentPayments } from "@/components/dashboard/recent-payments";
 import { LateDues } from "@/components/dashboard/late-dues";
+import { getUserContext } from "@/actions/profile";
 
 export const metadata: Metadata = { title: "Tableau de bord — Loca" };
 
@@ -35,6 +36,8 @@ export default async function DashboardPage() {
 
   const profile = await getCurrentProfile();
   const result = await getOwnerDashboard();
+    const ctxResult = await getUserContext();
+  const isTenant = ctxResult.success ? ctxResult.data!.is_tenant : false;
 
   if (!result.success) {
     return (
@@ -52,6 +55,37 @@ export default async function DashboardPage() {
 
   const dashboard = result.data!;
   const { counts, finance, recent_payments, late_dues } = dashboard;
+
+    // Cas : owner vide + locataire lié → orienter vers l'espace locataire
+  if (counts.properties === 0 && isTenant) {
+    return (
+      <div className="space-y-6 max-w-2xl">
+        <div>
+          <h1 className="font-heading text-3xl font-bold tracking-tight">
+            Bonjour{profile ? `, ${profile.first_name}` : ""}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Votre espace locataire est disponible.
+          </p>
+        </div>
+
+        <div className="rounded-lg border bg-card p-6 space-y-4">
+          <div>
+            <p className="font-medium">
+              Vous êtes connecté en tant que locataire
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Consultez votre logement, vos échéances et vos reçus depuis
+              l’espace locataire dédié.
+            </p>
+          </div>
+          <Link href="/tenant" className={cn(buttonVariants())}>
+            Accéder à mon espace locataire
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

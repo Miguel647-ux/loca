@@ -1,5 +1,5 @@
 "use server";
-
+import type { ActionResult } from "@/lib/action-result";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -18,10 +18,7 @@ import {
 
 // ---------------------------------------------------------------
 // Type de retour standard pour tous les Server Actions d'auth
-// ---------------------------------------------------------------
-export type ActionResult =
-  | { success: true; message?: string }
-  | { success: false; error: string; fieldErrors?: Record<string, string[]> };
+
 
 // ---------------------------------------------------------------
 // LOGIN
@@ -52,7 +49,22 @@ export async function signIn(input: LoginInput): Promise<ActionResult> {
   }
 
   revalidatePath("/", "layout");
-  return { success: true };
+    // Détection rôle pour redirection intelligente
+  let redirectTo = "/dashboard";
+  try {
+    const { data: ctx } = await supabase.rpc("get_my_user_context");
+    const c = ctx as
+      | { is_tenant?: boolean; properties_count?: number }
+      | null;
+    if (c?.is_tenant && (c?.properties_count ?? 0) === 0) {
+      redirectTo = "/tenant";
+    }
+  } catch {
+    // En cas d'échec, on garde /dashboard par défaut
+  }
+
+  revalidatePath("/", "layout");
+  return { success: true, redirectTo };
 }
 
 // ---------------------------------------------------------------

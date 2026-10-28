@@ -39,8 +39,8 @@ export function LoginForm() {
       return;
     }
 
-    toast.success("Connexion réussie.");
-    router.push("/dashboard");
+        toast.success("Connexion réussie.");
+    router.push(result.redirectTo ?? "/dashboard");
     router.refresh();
   }
 

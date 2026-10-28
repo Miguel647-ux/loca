@@ -6,6 +6,7 @@ import { Logo } from "@/components/layout/logo";
 import { SidebarContent } from "@/components/layout/sidebar-content";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { getUnreadNotificationsCount } from "@/actions/notifications";
+import { getUserContext } from "@/actions/profile";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,9 @@ export default async function DashboardLayout({
   if (!profile) {
     redirect("/auth/login");
   }
+  const ctxResult = await getUserContext();
+  const isTenant = ctxResult.success ? ctxResult.data!.is_tenant : false;
+  
 
   const userMenuProfile = {
     firstName: profile.first_name,
@@ -57,6 +61,7 @@ const unreadCount = unreadResult.success ? unreadResult.data!.count : 0;
           settingsHref="/dashboard/settings"
           homeHref="/dashboard"
           unreadCount={unreadCount}
+          showTenantLink={isTenant}
         />
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
           {children}
