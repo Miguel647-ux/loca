@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Connexion — Loca",
 };
 
+
+
 export default function LoginPage() {
   return <LoginForm />;
 }
+

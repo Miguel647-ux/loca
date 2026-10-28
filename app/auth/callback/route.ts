@@ -7,18 +7,37 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/dashboard";
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/auth/error`);
+    return NextResponse.redirect(`${origin}/auth/error?reason=no_code`);
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    return NextResponse.redirect(`${origin}/auth/error`);
+    return NextResponse.redirect(`${origin}/auth/error?reason=exchange_failed`);
   }
 
-  // Sécurité : on n'accepte qu'un chemin interne commençant par /
-  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  // --- Redirection intelligente (Owner vs Tenant) ---
+  let redirectTo = next;
+  try {
+    const { data: ctx } = await supabase.rpc("get_my_user_context");
+    const c = ctx as { is_tenant?: boolean; properties_count?: number } | null;
+    
+    // Si locataire lié ET 0 propriété → espace locataire
+    if (c?.is_tenant && (c?.properties_count ?? 0) === 0) {
+      redirectTo = "/tenant";
+    } else {
+      redirectTo = "/dashboard";
+    }
+  } catch {
+    // En cas d'échec de la RPC, on garde /dashboard par défaut
+    redirectTo = "/dashboard";
+  }
 
-  return NextResponse.redirect(`${origin}${safeNext}`);
+  // --- Protection contre les redirections ouvertes (Open Redirect) ---
+  // On s'assure que l'URL commence par un seul "/" et pas "//"
+  const isSafe = redirectTo.startsWith("/") && !redirectTo.startsWith("//");
+  const safeUrl = isSafe ? redirectTo : "/dashboard";
+
+  return NextResponse.redirect(`${origin}${safeUrl}`);
 }
