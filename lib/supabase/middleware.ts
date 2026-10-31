@@ -35,7 +35,7 @@ export async function updateSession(request: NextRequest) {
 
   const isAuthRoute = pathname.startsWith("/auth");
   const isProtectedRoute =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/tenant");
+    pathname.startsWith("/dashboard") || pathname.startsWith("/tenant") || pathname.startsWith("/admin");
 
   // Non connecté → tente d'accéder à une route protégée → login
   if (!user && isProtectedRoute) {

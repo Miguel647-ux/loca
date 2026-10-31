@@ -1,10 +1,11 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Logo } from "@/components/layout/logo";
 import Link from "next/link";
 import { LayoutDashboard, Users, LogOut } from "lucide-react";
 import { signOut } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
+import { AdminLogoutButton } from "@/components/admin/admin-logout-button";
 
 export default async function AdminLayout({
   children,
@@ -24,7 +25,7 @@ export default async function AdminLayout({
 
   // SÉCURITÉ CRITIQUE : Si ce n'est pas un admin, on redirige
   if (profile?.role !== "admin") {
-    redirect("/dashboard");
+    notFound();
   }
 
   return (
@@ -45,11 +46,7 @@ export default async function AdminLayout({
           </Link>
         </nav>
         <div className="p-3 border-t">
-          <form action={signOut}>
-            <Button variant="ghost" className="w-full justify-start text-destructive">
-              <LogOut className="size-4 mr-2" /> Déconnexion
-            </Button>
-          </form>
+          <AdminLogoutButton />
         </div>
       </aside>
 

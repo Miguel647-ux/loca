@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Home, LogOut, Settings, User as UserIcon } from "lucide-react";
-
+import { Home, LogOut, Settings, User as UserIcon, ShieldAlert } from "lucide-react";
 import { signOut } from "@/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -75,6 +74,15 @@ export function UserMenu({
           </span>
         </div>
         <DropdownMenuSeparator />
+        {profile.role === "admin" && (
+          <>
+            <DropdownMenuItem onClick={() => router.push("/admin")}>
+              <ShieldAlert className="size-4 text-[var(--brand)]" />
+              <span className="text-[var(--brand)] font-medium">Espace Admin</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem onClick={() => router.push(settingsHref)}>
           <UserIcon className="size-4" />
           <span>Mon profil</span>
