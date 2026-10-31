@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getSafeRedirect } from "@/lib/utils";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -35,9 +36,8 @@ export async function GET(request: Request) {
   }
 
   // --- Protection contre les redirections ouvertes (Open Redirect) ---
-  // On s'assure que l'URL commence par un seul "/" et pas "//"
-  const isSafe = redirectTo.startsWith("/") && !redirectTo.startsWith("//");
-  const safeUrl = isSafe ? redirectTo : "/dashboard";
+  // La fonction getSafeRedirect vérifie que l'URL commence par un "/" et ne contient pas "://"
+  const safeUrl = getSafeRedirect(redirectTo);
 
   return NextResponse.redirect(`${origin}${safeUrl}`);
 }

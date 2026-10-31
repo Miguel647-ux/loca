@@ -2,7 +2,7 @@
 
 import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import { signIn } from "@/actions/auth";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
+import { getSafeRedirect } from "@/lib/utils"; // Import de la sécurité
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,6 +24,7 @@ import {
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<LoginInput>({
@@ -40,8 +42,14 @@ export function LoginForm() {
       return;
     }
 
-        toast.success("Connexion réussie.");
-    router.push(result.redirectTo ?? "/dashboard");
+    toast.success("Connexion réussie.");
+    
+    // On récupère la destination (soit du serveur, soit de l'URL, soit /dashboard par défaut)
+    const urlRedirect = searchParams.get("redirectTo");
+    const finalDestination = result.redirectTo ?? urlRedirect ?? "/dashboard";
+    
+    // On sécurise la redirection avec notre fonction
+    router.push(getSafeRedirect(finalDestination));
     router.refresh();
   }
 
@@ -56,7 +64,7 @@ export function LoginForm() {
         </p>
       </div>
 
-       <GoogleAuthButton />
+      <GoogleAuthButton />
 
       {/* --- SÉPARATEUR --- */}
       <div className="relative">
@@ -69,7 +77,6 @@ export function LoginForm() {
           </span>
         </div>
       </div>
-
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
