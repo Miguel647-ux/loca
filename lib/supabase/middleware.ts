@@ -2,7 +2,33 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  // 1. Génération du Nonce cryptographique
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  
+  // 2. Définition de la CSP stricte (sans unsafe-inline / unsafe-eval)
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://*.supabase.co;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data: https://*.supabase.co;
+    font-src 'self' data:;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+  `.replace(/\s{2,}/g, " ").trim();
+
+  // 3. Préparation des headers avec le nonce
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+
+  // Application de la CSP sur la réponse initiale
+  supabaseResponse.headers.set("Content-Security-Policy", cspHeader);
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,7 +42,11 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({ 
+            request: { headers: requestHeaders } 
+          });
+          // On réapplique la CSP et les headers
+          supabaseResponse.headers.set("Content-Security-Policy", cspHeader);
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -26,7 +56,6 @@ export async function updateSession(request: NextRequest) {
   );
 
   // IMPORTANT : ne rien mettre entre createServerClient et getUser().
-  // Cela peut casser la session.
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -42,12 +71,14 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     url.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(url);
+    
+    const redirectRes = NextResponse.redirect(url);
+    redirectRes.headers.set("Content-Security-Policy", cspHeader);
+    return redirectRes;
   }
 
   // Connecté → tente d'accéder aux routes auth → dashboard
   if (user && isAuthRoute) {
-    // Sauf callback et reset-password (flux légitimes)
     if (
       pathname === "/auth/callback" ||
       pathname === "/auth/reset-password"
@@ -56,7 +87,10 @@ export async function updateSession(request: NextRequest) {
     }
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+    
+    const redirectRes = NextResponse.redirect(url);
+    redirectRes.headers.set("Content-Security-Policy", cspHeader);
+    return redirectRes;
   }
 
   return supabaseResponse;
