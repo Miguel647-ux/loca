@@ -40,7 +40,7 @@ export const registerSchema = z
       .toLowerCase(),
     password: z
       .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères.")
+      .min(12, "Le mot de passe doit contenir au moins 12 caractères.")
       .max(200, "Mot de passe trop long."),
     confirmPassword: z
       .string()
@@ -49,7 +49,8 @@ export const registerSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas.",
     path: ["confirmPassword"],
-  });
+  })
+  .strict();
 
 export const forgotPasswordSchema = z.object({
   email: z
