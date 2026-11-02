@@ -25,4 +25,3 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
-local-gules.vercel.app
